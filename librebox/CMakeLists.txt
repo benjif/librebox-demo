@@ -23,6 +23,8 @@ FetchContent_Declare(
   GIT_REPOSITORY https://github.com/luau-lang/luau.git
   GIT_TAG 0.688
 )
+set(LUAU_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(LUAU_BUILD_CLI OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(luau)
 
 # ---------- Fetch Raylib ----------
