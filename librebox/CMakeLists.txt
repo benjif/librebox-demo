@@ -3,15 +3,36 @@ cmake_minimum_required(VERSION 3.20)
 project(librebox LANGUAGES C CXX)
 include(FetchContent)
 
+if(NOT CMAKE_BUILD_TYPE)
+  # Default to release
+  set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build" FORCE)
+endif()
+
 # MSVC runtime (/MD)
 if(MSVC)
   set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
 endif()
 
+# Debug
+set(CMAKE_CXX_FLAGS_DEBUG "")
+set(CMAKE_C_FLAGS_DEBUG "")
 if(MSVC)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc /O2 /DNOMINMAX")
+  set(CMAKE_CXX_FLAGS_DEBUG "/EHsc /Od /Zi /MDd /DDEBUG /D_DEBUG")
+  set(CMAKE_C_FLAGS_DEBUG "/Od /Zi /MDd /DDEBUG /D_DEBUG")
 else()
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -Wall -Wextra")
+  set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -Wall -Wextra -DDEBUG")
+  set(CMAKE_C_FLAGS_DEBUG "-O0 -g -Wall -Wextra -DDEBUG")
+endif()
+
+# Release
+set(CMAKE_CXX_FLAGS_RELEASE "")
+set(CMAKE_C_FLAGS_RELEASE "")
+if(MSVC)
+  set(CMAKE_CXX_FLAGS_RELEASE "/EHsc /O2 /MD /DNDEBUG /DNOMINMAX")
+  set(CMAKE_C_FLAGS_RELEASE "/O2 /MD /DNDEBUG")
+else()
+  set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG")
+  set(CMAKE_C_FLAGS_RELEASE "-O2 -DNDEBUG")
 endif()
 
 # Paths
