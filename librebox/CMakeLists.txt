@@ -1,6 +1,7 @@
 # CMakeLists.txt (Project Root)
 cmake_minimum_required(VERSION 3.20)
 project(librebox LANGUAGES C CXX)
+include(FetchContent)
 
 # MSVC runtime (/MD)
 if(MSVC)
@@ -15,38 +16,22 @@ endif()
 
 # Paths
 set(PROJ_ROOT "${CMAKE_SOURCE_DIR}")
-set(VENDOR_DIR "${PROJ_ROOT}/third_party/vendor")
 
-# ---------- Find Pre-built Luau lib ----------
-set(LUAU_INSTALL_DIR "${VENDOR_DIR}/luau")
-find_library(LUAU_LIB
-  NAMES Luau
-  PATHS "${LUAU_INSTALL_DIR}/lib"
-  NO_DEFAULT_PATH
+# ---------- Fetch Luau ----------
+FetchContent_Declare(
+  luau
+  GIT_REPOSITORY https://github.com/luau-lang/luau.git
+  GIT_TAG 0.688
 )
-if(NOT LUAU_LIB)
-  message(FATAL_ERROR "Luau library not found. Did you run build_dependencies.bat? Searched in: ${LUAU_INSTALL_DIR}/lib")
-endif()
-message(STATUS "Found Luau library: ${LUAU_LIB}")
+FetchContent_MakeAvailable(luau)
 
-
-# ---------- Find Pre-built Raylib lib ----------
-set(RAYLIB_INSTALL_DIR "${VENDOR_DIR}/raylib")
-if(WIN32)
-  set(RAYLIB_LIB_NAMES raylib raylib_static)
-else()
-  set(RAYLIB_LIB_NAMES raylib libraylib.a)
-endif()
-
-find_library(RAYLIB_LIB
-  NAMES ${RAYLIB_LIB_NAMES}
-  PATHS "${RAYLIB_INSTALL_DIR}/lib"
-  NO_DEFAULT_PATH
+# ---------- Fetch Raylib ----------
+FetchContent_Declare(
+  raylib
+  GIT_REPOSITORY https://github.com/raysan5/raylib.git
+  GIT_TAG 5.5
 )
-if(NOT RAYLIB_LIB)
-  message(FATAL_ERROR "raylib library not found in ${RAYLIB_INSTALL_DIR}/lib")
-endif()
-message(STATUS "Found Raylib library: ${RAYLIB_LIB}")
+FetchContent_MakeAvailable(raylib)
 
 
 # ---------- Engine exe ----------
@@ -58,25 +43,20 @@ file(GLOB_RECURSE ENGINE_SOURCES
 )
 add_executable(librebox ${ENGINE_SOURCES})
 
-# ---vvv--- THE FIX IS HERE ---vvv---
-# We now point to the specific subdirectories where the headers were installed,
-# exactly like your original build script did.
 target_include_directories(librebox PRIVATE
   "${PROJ_ROOT}"
-  "${LUAU_INSTALL_DIR}/include/luau/Common/include"
-  "${LUAU_INSTALL_DIR}/include/luau/Ast/include"
-  "${LUAU_INSTALL_DIR}/include/luau/Compiler/include"
-  "${LUAU_INSTALL_DIR}/include/luau/Config/include"
-  "${LUAU_INSTALL_DIR}/include/luau/VM/include"
-  "${RAYLIB_INSTALL_DIR}/include"
+  "${luau_SOURCE_DIR}/Common/include"
+  "${luau_SOURCE_DIR}/Ast/include"
+  "${luau_SOURCE_DIR}/Compiler/include"
+  "${luau_SOURCE_DIR}/Config/include"
+  "${luau_SOURCE_DIR}/VM/include"
 )
-# ---^^^--- THE FIX IS HERE ---^^^---
 
 target_compile_features(librebox PRIVATE cxx_std_20)
 
 
 # ---------- Linking ----------
-target_link_libraries(librebox PRIVATE ${LUAU_LIB} ${RAYLIB_LIB})
+target_link_libraries(librebox PRIVATE Luau.Ast Luau.Compiler Luau.Config Luau.VM raylib)
 
 if(WIN32)
   target_link_libraries(librebox PRIVATE opengl32 gdi32 winmm user32 shell32)
