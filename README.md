@@ -29,7 +29,7 @@
 Librebox is an open-source game engine that runs Luau. It aims to replicate the Roblox Public API, allowing Roblox code to run on the Librebox engine.
 
 ### Why Librebox?
-Librebox gives developers agency over their games -- from the code to the engine. Create your own immersive games with a familiar interface (and fully own your platform). 
+Librebox gives developers agency over their games -- from the code to the engine. Create your own immersive games with a familiar interface (and fully own your platform).
 
 ### Example
 
@@ -108,7 +108,7 @@ Librebox is currently in demo stage (it implements a limited subset of the Roblo
 
 ### To Be Added
 
-Of course, this is just a rendering demo. Librebox is extensible and easily supports the additions of new services and features. 
+Of course, this is just a rendering demo. Librebox is extensible and easily supports the additions of new services and features.
 
 In the next release, we will incorporate `UserInputService` and `StarterPlayer`, turning Librebox into an actual interactive engine.
 
@@ -117,7 +117,7 @@ Librebox currently supports Windows, but **can easily be ported anywhere**. The 
 
 * Windows 7+ (`.exe`)
   * Standalone executable (LibreboxPlayer.exe)
-  
+
 ### Future Support
 
 Right now, Librebox compatibility is limited. This is currently a demo (not even a release!). In future releases, you can expect the following:
@@ -149,13 +149,30 @@ In future releases, it could be entirely possible to:
 
 This is entirely feasible, and, in fact, a good point for the existence of Librebox. However, what we'd like to implement first is full client compatiblity (proper rendering, APIs). Then, this makes it easier to move on to servers.
 
-And best of all, it is copyright free and open source (Librebox is just an environment.) 
+And best of all, it is copyright free and open source (Librebox is just an environment.)
 
 ### Usage and Documentation
 
-I'll add this ASAP. For building dependencies, use the 'build_dependencies.bat' script, and for building the engine, `build_engine.bat`
-For the .exe, you can specify a path either as the first argument (lua script only), or as ``--path`` (script or folder). 
-LibreboxPlayer.exe includes three arguments: ``--no-place``, ``--target-fps``, and ``--path``.
+#### Building
+Librebox uses CMake with automatic dependency management.
+
+```bash
+# Navigate to the librebox directory
+cd librebox
+
+# Create build directory and configure
+mkdir build && cd build
+cmake ..
+
+# Build the engine
+cmake --build . --config Release
+```
+
+The built executable will be `LibreboxPlayer` (or `LibreboxPlayer.exe` on Windows) in the build directory.
+
+#### Running
+For the executable, you can specify a path either as the first argument (lua script only), or as `--path` (script or folder).
+LibreboxPlayer includes three arguments: `--no-place`, `--target-fps`, and `--path`.
 
 ``--no-place``: (FLAG) Does not execute the default place initialization script (this includes the Baseplate.)
 ``--target-fps``: Strict the FPS to a certain value (default monitor refresh rate)
@@ -164,9 +181,9 @@ LibreboxPlayer.exe includes three arguments: ``--no-place``, ``--target-fps``, a
 ### Licenses
 This project uses:
 
-- Luau, licensed under the MIT License.  
-  Copyright (c) 2025 Roblox Corporation.  
-- raylib, licensed under the zlib/libpng License.  
+- Luau, licensed under the MIT License.
+  Copyright (c) 2025 Roblox Corporation.
+- raylib, licensed under the zlib/libpng License.
   Copyright (c) 2013-2025 Ramon Santamaria and contributors.
 
 ### Legal Notice
